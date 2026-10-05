@@ -1,0 +1,19 @@
+AGENTS.md
+  s_18e670258f387c::t_70b408579fa587 134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bd198331f149e00c9717660e062286430435478b",
+  "prompts": {},
+  "sessions": {
+    "s_18e670258f387c": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a10d0f-4dc9-74f0-90b6-6d87d5954140",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Matt Carey <mcarey@cloudflare.com>"
+    }
+  }
+}
