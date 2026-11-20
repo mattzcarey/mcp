@@ -406,6 +406,10 @@ export const tools: readonly Tool[] = [
                 }
               ]
             },
+            "multiprovider_enabled": {
+              "description": "Lets requests to a model use every provider that serves it. When off, a model uses only the providers it launched with, so a provider added later receives none of its traffic. A request that names providers (the cf-aig-allowed-providers header or routing.allowedProviders) can still use any of them. Model aliases (custom/) are not restricted.",
+              "type": "boolean"
+            },
             "otel": {
               "oneOf": [
                 {
@@ -1129,6 +1133,10 @@ export const tools: readonly Tool[] = [
             "id": {
               "type": "string"
             },
+            "internal_id": {
+              "format": "uuid",
+              "type": "string"
+            },
             "is_default": {
               "type": "boolean"
             },
@@ -1175,6 +1183,9 @@ export const tools: readonly Tool[] = [
             "modified_at": {
               "format": "date-time",
               "type": "string"
+            },
+            "multiprovider_enabled": {
+              "type": "boolean"
             },
             "otel": {
               "oneOf": [
@@ -1482,6 +1493,7 @@ export const tools: readonly Tool[] = [
             "collect_logs",
             "created_at",
             "id",
+            "internal_id",
             "modified_at",
             "rate_limiting_interval",
             "rate_limiting_limit"
@@ -1911,6 +1923,10 @@ export const tools: readonly Tool[] = [
                   "id": {
                     "type": "string"
                   },
+                  "internal_id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "is_default": {
                     "type": "boolean"
                   },
@@ -1957,6 +1973,9 @@ export const tools: readonly Tool[] = [
                   "modified_at": {
                     "format": "date-time",
                     "type": "string"
+                  },
+                  "multiprovider_enabled": {
+                    "type": "boolean"
                   },
                   "otel": {
                     "oneOf": [
@@ -2264,6 +2283,7 @@ export const tools: readonly Tool[] = [
                   "collect_logs",
                   "created_at",
                   "id",
+                  "internal_id",
                   "modified_at",
                   "rate_limiting_interval",
                   "rate_limiting_limit"
@@ -2734,6 +2754,10 @@ export const tools: readonly Tool[] = [
             "id": {
               "type": "string"
             },
+            "internal_id": {
+              "format": "uuid",
+              "type": "string"
+            },
             "is_default": {
               "type": "boolean"
             },
@@ -2780,6 +2804,9 @@ export const tools: readonly Tool[] = [
             "modified_at": {
               "format": "date-time",
               "type": "string"
+            },
+            "multiprovider_enabled": {
+              "type": "boolean"
             },
             "otel": {
               "oneOf": [
@@ -3087,6 +3114,7 @@ export const tools: readonly Tool[] = [
             "collect_logs",
             "created_at",
             "id",
+            "internal_id",
             "modified_at",
             "rate_limiting_interval",
             "rate_limiting_limit"
@@ -3515,6 +3543,10 @@ export const tools: readonly Tool[] = [
                   "id": {
                     "type": "string"
                   },
+                  "internal_id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "is_default": {
                     "type": "boolean"
                   },
@@ -3561,6 +3593,9 @@ export const tools: readonly Tool[] = [
                   "modified_at": {
                     "format": "date-time",
                     "type": "string"
+                  },
+                  "multiprovider_enabled": {
+                    "type": "boolean"
                   },
                   "otel": {
                     "oneOf": [
@@ -3868,6 +3903,7 @@ export const tools: readonly Tool[] = [
                   "collect_logs",
                   "created_at",
                   "id",
+                  "internal_id",
                   "modified_at",
                   "rate_limiting_interval",
                   "rate_limiting_limit"
@@ -4368,6 +4404,10 @@ export const tools: readonly Tool[] = [
             "id": {
               "type": "string"
             },
+            "internal_id": {
+              "format": "uuid",
+              "type": "string"
+            },
             "is_default": {
               "type": "boolean"
             },
@@ -4414,6 +4454,9 @@ export const tools: readonly Tool[] = [
             "modified_at": {
               "format": "date-time",
               "type": "string"
+            },
+            "multiprovider_enabled": {
+              "type": "boolean"
             },
             "otel": {
               "oneOf": [
@@ -4721,6 +4764,7 @@ export const tools: readonly Tool[] = [
             "collect_logs",
             "created_at",
             "id",
+            "internal_id",
             "modified_at",
             "rate_limiting_interval",
             "rate_limiting_limit"
@@ -5150,6 +5194,10 @@ export const tools: readonly Tool[] = [
                   "id": {
                     "type": "string"
                   },
+                  "internal_id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "is_default": {
                     "type": "boolean"
                   },
@@ -5196,6 +5244,9 @@ export const tools: readonly Tool[] = [
                   "modified_at": {
                     "format": "date-time",
                     "type": "string"
+                  },
+                  "multiprovider_enabled": {
+                    "type": "boolean"
                   },
                   "otel": {
                     "oneOf": [
@@ -5503,6 +5554,7 @@ export const tools: readonly Tool[] = [
                   "collect_logs",
                   "created_at",
                   "id",
+                  "internal_id",
                   "modified_at",
                   "rate_limiting_interval",
                   "rate_limiting_limit"
@@ -6145,6 +6197,10 @@ export const tools: readonly Tool[] = [
               "id": {
                 "type": "string"
               },
+              "internal_id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "is_default": {
                 "type": "boolean"
               },
@@ -6191,6 +6247,9 @@ export const tools: readonly Tool[] = [
               "modified_at": {
                 "format": "date-time",
                 "type": "string"
+              },
+              "multiprovider_enabled": {
+                "type": "boolean"
               },
               "otel": {
                 "oneOf": [
@@ -6498,6 +6557,7 @@ export const tools: readonly Tool[] = [
               "collect_logs",
               "created_at",
               "id",
+              "internal_id",
               "modified_at",
               "rate_limiting_interval",
               "rate_limiting_limit"
@@ -6935,6 +6995,10 @@ export const tools: readonly Tool[] = [
                     "id": {
                       "type": "string"
                     },
+                    "internal_id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
                     "is_default": {
                       "type": "boolean"
                     },
@@ -6981,6 +7045,9 @@ export const tools: readonly Tool[] = [
                     "modified_at": {
                       "format": "date-time",
                       "type": "string"
+                    },
+                    "multiprovider_enabled": {
+                      "type": "boolean"
                     },
                     "otel": {
                       "oneOf": [
@@ -7288,6 +7355,7 @@ export const tools: readonly Tool[] = [
                     "collect_logs",
                     "created_at",
                     "id",
+                    "internal_id",
                     "modified_at",
                     "rate_limiting_interval",
                     "rate_limiting_limit"
@@ -7350,7 +7418,7 @@ export const tools: readonly Tool[] = [
   {
     name: "aiGateway_gateways_update",
     title: "Update a gateway",
-    description: "Updates the configuration of an AI Gateway, such as its caching, rate limiting, logging, and authentication settings.\n\nPUT /accounts/{account_id}/ai-gateway/gateways/{id}",
+    description: "Updates the configuration of an AI Gateway, such as its caching, rate limiting, spend limits, logging, and authentication settings.\n\nPUT /accounts/{account_id}/ai-gateway/gateways/{id}",
     inputSchema: {
       type: "object",
       properties: {
@@ -7742,6 +7810,10 @@ export const tools: readonly Tool[] = [
                 }
               ]
             },
+            "multiprovider_enabled": {
+              "description": "Lets requests to a model use every provider that serves it. When off, a model uses only the providers it launched with, so a provider added later receives none of its traffic. A request that names providers (the cf-aig-allowed-providers header or routing.allowedProviders) can still use any of them. Model aliases (custom/) are not restricted.",
+              "type": "boolean"
+            },
             "otel": {
               "oneOf": [
                 {
@@ -8042,7 +8114,6 @@ export const tools: readonly Tool[] = [
               ]
             },
             "workers_ai_billing_mode": {
-              "default": "postpaid",
               "description": "Controls how Workers AI inference calls routed through this gateway are billed. 'postpaid' bills the account directly through Workers AI; 'unified' deducts credits via AI Gateway using neuron-based pricing and delegates billing to AI Gateway.",
               "enum": [
                 "postpaid",
@@ -8469,6 +8540,10 @@ export const tools: readonly Tool[] = [
             "id": {
               "type": "string"
             },
+            "internal_id": {
+              "format": "uuid",
+              "type": "string"
+            },
             "is_default": {
               "type": "boolean"
             },
@@ -8515,6 +8590,9 @@ export const tools: readonly Tool[] = [
             "modified_at": {
               "format": "date-time",
               "type": "string"
+            },
+            "multiprovider_enabled": {
+              "type": "boolean"
             },
             "otel": {
               "oneOf": [
@@ -8822,6 +8900,7 @@ export const tools: readonly Tool[] = [
             "collect_logs",
             "created_at",
             "id",
+            "internal_id",
             "modified_at",
             "rate_limiting_interval",
             "rate_limiting_limit"
@@ -9251,6 +9330,10 @@ export const tools: readonly Tool[] = [
                   "id": {
                     "type": "string"
                   },
+                  "internal_id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
                   "is_default": {
                     "type": "boolean"
                   },
@@ -9297,6 +9380,9 @@ export const tools: readonly Tool[] = [
                   "modified_at": {
                     "format": "date-time",
                     "type": "string"
+                  },
+                  "multiprovider_enabled": {
+                    "type": "boolean"
                   },
                   "otel": {
                     "oneOf": [
@@ -9604,6 +9690,7 @@ export const tools: readonly Tool[] = [
                   "collect_logs",
                   "created_at",
                   "id",
+                  "internal_id",
                   "modified_at",
                   "rate_limiting_interval",
                   "rate_limiting_limit"

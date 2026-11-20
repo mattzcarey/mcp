@@ -384,6 +384,27 @@ export const workers_Worker: JSONObject = {
     },
     "observability": {
       "properties": {
+        "agents": {
+          "oneOf": [
+            {
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "head_sampling_rate": {
+                  "type": "number"
+                },
+                "persist": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "enabled": {
           "type": "boolean"
         },
@@ -718,6 +739,27 @@ export const workers_env_binding_item: JSONObject = {
  */
 export const workers_observability: JSONObject = {
   "properties": {
+    "agents": {
+      "oneOf": [
+        {
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "head_sampling_rate": {
+              "type": "number"
+            },
+            "persist": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "enabled": {
       "type": "boolean"
     },

@@ -21,7 +21,14 @@ export const realtimekit_ActiveSession: JSONObject = {
       "type": "string"
     },
     "ended_at": {
-      "type": "string"
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "id": {
       "type": "string"
@@ -411,6 +418,9 @@ export const realtimekit_Meeting: JSONObject = {
     "session_keep_alive_time_in_secs": {
       "type": "number"
     },
+    "sip": {
+      "$ref": "#/$defs/realtimekit_MeetingSip"
+    },
     "status": {
       "enum": [
         "ACTIVE",
@@ -438,6 +448,36 @@ export const realtimekit_Meeting: JSONObject = {
     "updated_at"
   ],
   "type": "object"
+};
+
+/**
+ * The schema of `realtimekit_MeetingSip` in responses.
+ */
+export const realtimekit_MeetingSip: JSONObject = {
+  "oneOf": [
+    {
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "sip_uri": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "password",
+        "sip_uri",
+        "username"
+      ],
+      "type": "object"
+    },
+    {
+      "type": "null"
+    }
+  ]
 };
 
 /**
@@ -599,9 +639,27 @@ export const realtimekit_StorageConfig: JSONObject = {
               "properties": {
                 "access_key": {},
                 "region": {},
+                "secret": {},
                 "type": {
                   "enum": [
-                    "aws",
+                    "aws"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "access_key",
+                "region",
+                "secret"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "access_key": {},
+                "region": {},
+                "type": {
+                  "enum": [
                     "azure",
                     "digitalocean"
                   ],

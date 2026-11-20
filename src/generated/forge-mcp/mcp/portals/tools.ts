@@ -299,7 +299,7 @@ export const tools: readonly Tool[] = [
   {
     name: "mcp_portals_create",
     title: "Create a new MCP Portal",
-    description: "Creates a new MCP portal for managing AI tool access through Cloudflare Access.\n\nThis method is beta.\n\nPOST /accounts/{account_id}/access/ai-controls/mcp/portals",
+    description: "Creates a new MCP portal. Each account supports up to 50 portals, including disabled portals.\n\nThis method is beta.\n\nPOST /accounts/{account_id}/access/ai-controls/mcp/portals",
     inputSchema: {
       type: "object",
       properties: {
@@ -419,7 +419,7 @@ export const tools: readonly Tool[] = [
                 ],
                 "type": "object"
               },
-              "maxItems": 80,
+              "maxItems": 120,
               "type": "array"
             }
           },
@@ -698,11 +698,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -727,11 +733,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -1054,11 +1066,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -1083,11 +1101,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -1690,11 +1714,17 @@ export const tools: readonly Tool[] = [
                           "portal_description": {
                             "type": "string"
                           },
+                          "portal_enabled": {
+                            "type": "boolean"
+                          },
                           "server_alias": {
                             "type": "string"
                           },
                           "server_description": {
                             "type": "string"
+                          },
+                          "server_enabled": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -1719,11 +1749,17 @@ export const tools: readonly Tool[] = [
                           "portal_description": {
                             "type": "string"
                           },
+                          "portal_enabled": {
+                            "type": "boolean"
+                          },
                           "server_alias": {
                             "type": "string"
                           },
                           "server_description": {
                             "type": "string"
+                          },
+                          "server_enabled": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -2054,11 +2090,17 @@ export const tools: readonly Tool[] = [
                                 "portal_description": {
                                   "type": "string"
                                 },
+                                "portal_enabled": {
+                                  "type": "boolean"
+                                },
                                 "server_alias": {
                                   "type": "string"
                                 },
                                 "server_description": {
                                   "type": "string"
+                                },
+                                "server_enabled": {
+                                  "type": "boolean"
                                 }
                               },
                               "required": [
@@ -2083,11 +2125,17 @@ export const tools: readonly Tool[] = [
                                 "portal_description": {
                                   "type": "string"
                                 },
+                                "portal_enabled": {
+                                  "type": "boolean"
+                                },
                                 "server_alias": {
                                   "type": "string"
                                 },
                                 "server_description": {
                                   "type": "string"
+                                },
+                                "server_enabled": {
+                                  "type": "boolean"
                                 }
                               },
                               "required": [
@@ -2446,11 +2494,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -2475,11 +2529,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -2802,11 +2862,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -2831,11 +2897,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -3327,7 +3399,7 @@ export const tools: readonly Tool[] = [
                 ],
                 "type": "object"
               },
-              "maxItems": 80,
+              "maxItems": 120,
               "type": "array"
             }
           },
@@ -3606,11 +3678,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -3635,11 +3713,17 @@ export const tools: readonly Tool[] = [
                         "portal_description": {
                           "type": "string"
                         },
+                        "portal_enabled": {
+                          "type": "boolean"
+                        },
                         "server_alias": {
                           "type": "string"
                         },
                         "server_description": {
                           "type": "string"
+                        },
+                        "server_enabled": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -3970,11 +4054,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [
@@ -3999,11 +4089,17 @@ export const tools: readonly Tool[] = [
                               "portal_description": {
                                 "type": "string"
                               },
+                              "portal_enabled": {
+                                "type": "boolean"
+                              },
                               "server_alias": {
                                 "type": "string"
                               },
                               "server_description": {
                                 "type": "string"
+                              },
+                              "server_enabled": {
+                                "type": "boolean"
                               }
                             },
                             "required": [

@@ -87,7 +87,7 @@ export const workers_Version: JSONObject = {
     },
     "bindings": {
       "$ref": "#/$defs/workers_bindings",
-      "description": "List of bindings attached to a Worker. You can find more about bindings on our docs: https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/#bindings."
+      "description": "Bindings attached to the version, as an array of objects that\neach name themselves. A create or patch request can send\n`bindings` or `env`, and a read returns both. A request that\nsends both fails with error 10021."
     },
     "cache_options": {
       "$ref": "#/$defs/workers_cache_options",
@@ -99,12 +99,15 @@ export const workers_Version: JSONObject = {
     },
     "compatibility_flags": {
       "$ref": "#/$defs/workers_compatibility_flags",
-      "default": [],
-      "description": "Flags that enable or disable certain features in the Workers runtime. Used to enable upcoming features or opt in or out of specific changes not included in a `compatibility_date`."
+      "description": "Enables or disables specific Workers runtime features, such as upcoming features or changes outside the `compatibility_date`.\n\nResponses list only the flags this version sets explicitly and exclude behavior that `compatibility_date` enables. Responses omit the field when the list is empty, so a missing field means the version sets zero flags."
     },
     "containers": {
       "$ref": "#/$defs/workers_containers",
       "description": "List of containers attached to a Worker. Containers can only be attached to Durable Object classes of this Worker script."
+    },
+    "env": {
+      "$ref": "#/$defs/workers_env",
+      "description": "Bindings attached to the version, as a map from binding name to\nbinding. Each value holds the same payload as the matching\n`bindings` entry, without `name`. Reads derive `env` from\n`bindings`, so the two fields always list the same bindings and\n`env` carries nothing extra. Reads omit secret values in both\nfields.\n\nA create or patch request can send `env` or `bindings`, and a\nrequest that sends both fails with error 10021. To copy a\nversion, drop `env` from the read before sending it back, and\nuse `inherit` bindings for secrets. In a patch, `env` entries\nmerge one binding at a time: set an entry to `null` to remove\nthat binding, while a `bindings` array replaces the whole set."
     },
     "exports": {
       "$ref": "#/$defs/workers_exports_config_map",
@@ -140,7 +143,7 @@ export const workers_Version: JSONObject = {
       ]
     },
     "modules": {
-      "description": "Code, sourcemaps, and other content used at runtime.\n\nThis includes [`_headers`](https://developers.cloudflare.com/workers/static-assets/headers/#custom-headers) and\n[`_redirects`](https://developers.cloudflare.com/workers/static-assets/redirects/) files used to configure\n[Static Assets](https://developers.cloudflare.com/workers/static-assets/). `_headers` and `_redirects` files should be\nincluded as modules named `_headers` and `_redirects` with content type `text/plain`.",
+      "description": "Code, sourcemaps, and other content used at runtime.\n\nSource maps use content type `application/source-map`. Responses include them only when requested with\n`include=modules,sourcemaps`. Workers stores the source map fields used to remap stack traces, so a returned\nsource map is equivalent to the uploaded file but not byte-identical.\n\nThis includes [`_headers`](https://developers.cloudflare.com/workers/static-assets/headers/#custom-headers) and\n[`_redirects`](https://developers.cloudflare.com/workers/static-assets/redirects/) files used to configure\n[Static Assets](https://developers.cloudflare.com/workers/static-assets/). `_headers` and `_redirects` files should be\nincluded as modules named `_headers` and `_redirects` with content type `text/plain`.",
       "items": {
         "properties": {
           "content_base64": {

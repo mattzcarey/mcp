@@ -73,7 +73,7 @@ export const tools: readonly Tool[] = [
                       "type": "boolean"
                     },
                     "match_threshold": {
-                      "default": 0.4,
+                      "description": "Minimum reranker relevance score a chunk must reach to be returned. When omitted, falls back to the instance-level score_threshold, then to 0.4.",
                       "type": "number"
                     },
                     "model": {
@@ -1175,6 +1175,11 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "default": false,
+                      "description": "Generates a per-file summary, topics, and keywords during indexing for text files and media transcripts of at least three chunks. The summary and keywords are stored as the item's context metadata (a context you set is kept), and the topics are added to chunk context headers where they fit. Best effort: a file whose summary fails is indexed without one. The model calls are billed to your account through the instance's AI Gateway. Changing this triggers a full re-index. Defaults to false.",
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "default": "porter",
                       "description": "Tokenizer used for keyword search indexing. porter provides word-level tokenization with Porter stemming (good for natural language queries). trigram enables character-level substring matching (good for partial matches, code, identifiers). Changing this triggers a full re-index. Defaults to porter.",
@@ -1399,6 +1404,7 @@ export const tools: readonly Tool[] = [
               "type": "number"
             },
             "source": {
+              "description": "The R2 bucket name for r2, the website URL for web-crawler, or the D1 database ID (UUID) for d1. A d1 instance also requires token_id, and the token needs D1 Read permission. The d1 database cannot be changed after creation.",
               "oneOf": [
                 {
                   "type": "string"
@@ -1412,6 +1418,30 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "description": "D1 source configuration. Required when creating a d1 instance and ignored for other types. For d1, include_items and exclude_items match each row's item key, `<id>.md`; a submitted source_params replaces both lists (an omitted list is cleared), so omit source_params to keep them.",
+                      "properties": {
+                        "query": {
+                          "description": "Read-only SELECT query run against the D1 database. It must return an `id` column that uniquely identifies each row. Columns named `title` and `content` set the document title and body, and up to 5 `meta_*` columns become filterable custom metadata; any other column is indexed as a labelled field. Every sync reads the full result, up to 100,000 rows, with the instance's token, and those reads count against your D1 usage. Leading and trailing whitespace is trimmed before the query is stored.",
+                          "type": "string"
+                        },
+                        "template": {
+                          "default": "labelled",
+                          "description": "How each row is rendered into the indexed document: labelled renders the title, the labelled fields, then the content; content_only renders the title and content (labelled fields only when there is no content); key_value renders every column as name: value; json renders every column as a JSON object.",
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ],
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "description": "List of path patterns to exclude. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /admin/** matches /admin/users and /admin/settings/advanced). Most accounts have a limit of 10 rules; contact support to raise it.",
                       "items": {
@@ -1571,12 +1601,13 @@ export const tools: readonly Tool[] = [
               "type": "string"
             },
             "type": {
-              "description": "Source type. When omitted or null with a non-blank source, HTTP(S) URLs infer web-crawler and existing R2 bucket names infer r2. A missing or blank source without a type uses managed upload-only storage.",
+              "description": "Source type. When omitted or null with a non-blank source, HTTP(S) URLs infer web-crawler and existing R2 bucket names infer r2. A missing or blank source without a type uses managed upload-only storage. d1 is never inferred; it indexes the rows returned by source_params.d1.query.",
               "oneOf": [
                 {
                   "enum": [
                     "r2",
-                    "web-crawler"
+                    "web-crawler",
+                    "d1"
                   ],
                   "type": "string"
                 },
@@ -1759,6 +1790,9 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "enum": [
                         "porter",
@@ -2020,6 +2054,26 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        },
+                        "template": {
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ],
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "items": {
                         "type": "string"
@@ -2157,7 +2211,8 @@ export const tools: readonly Tool[] = [
                 {
                   "enum": [
                     "r2",
-                    "web-crawler"
+                    "web-crawler",
+                    "d1"
                   ],
                   "type": "string"
                 },
@@ -2374,6 +2429,9 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "file_summary": {
+                            "type": "boolean"
+                          },
                           "keyword_tokenizer": {
                             "enum": [
                               "porter",
@@ -2635,6 +2693,26 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "d1": {
+                            "properties": {
+                              "query": {
+                                "type": "string"
+                              },
+                              "template": {
+                                "enum": [
+                                  "labelled",
+                                  "content_only",
+                                  "key_value",
+                                  "json"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "query"
+                            ],
+                            "type": "object"
+                          },
                           "exclude_items": {
                             "items": {
                               "type": "string"
@@ -2772,7 +2850,8 @@ export const tools: readonly Tool[] = [
                       {
                         "enum": [
                           "r2",
-                          "web-crawler"
+                          "web-crawler",
+                          "d1"
                         ],
                         "type": "string"
                       },
@@ -2945,19 +3024,44 @@ export const tools: readonly Tool[] = [
             "properties": {
               "errors": {
                 "items": {
-                  "properties": {
-                    "code": {
-                      "type": "number"
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            7017
+                          ],
+                          "type": "integer"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
                     },
-                    "message": {
-                      "type": "string"
+                    {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            7125
+                          ],
+                          "type": "integer"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message"
-                  ],
-                  "type": "object"
+                  ]
                 },
                 "type": "array"
               },
@@ -3157,6 +3261,9 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "enum": [
                         "porter",
@@ -3418,6 +3525,26 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        },
+                        "template": {
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ],
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "items": {
                         "type": "string"
@@ -3555,7 +3682,8 @@ export const tools: readonly Tool[] = [
                 {
                   "enum": [
                     "r2",
-                    "web-crawler"
+                    "web-crawler",
+                    "d1"
                   ],
                   "type": "string"
                 },
@@ -3761,6 +3889,9 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "file_summary": {
+                            "type": "boolean"
+                          },
                           "keyword_tokenizer": {
                             "enum": [
                               "porter",
@@ -4022,6 +4153,26 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "d1": {
+                            "properties": {
+                              "query": {
+                                "type": "string"
+                              },
+                              "template": {
+                                "enum": [
+                                  "labelled",
+                                  "content_only",
+                                  "key_value",
+                                  "json"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "query"
+                            ],
+                            "type": "object"
+                          },
                           "exclude_items": {
                             "items": {
                               "type": "string"
@@ -4159,7 +4310,8 @@ export const tools: readonly Tool[] = [
                       {
                         "enum": [
                           "r2",
-                          "web-crawler"
+                          "web-crawler",
+                          "d1"
                         ],
                         "type": "string"
                       },
@@ -4435,6 +4587,9 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "enum": [
                         "porter",
@@ -4696,6 +4851,26 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        },
+                        "template": {
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ],
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "items": {
                         "type": "string"
@@ -4833,7 +5008,8 @@ export const tools: readonly Tool[] = [
                 {
                   "enum": [
                     "r2",
-                    "web-crawler"
+                    "web-crawler",
+                    "d1"
                   ],
                   "type": "string"
                 },
@@ -5039,6 +5215,9 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "file_summary": {
+                            "type": "boolean"
+                          },
                           "keyword_tokenizer": {
                             "enum": [
                               "porter",
@@ -5300,6 +5479,26 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "d1": {
+                            "properties": {
+                              "query": {
+                                "type": "string"
+                              },
+                              "template": {
+                                "enum": [
+                                  "labelled",
+                                  "content_only",
+                                  "key_value",
+                                  "json"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "query"
+                            ],
+                            "type": "object"
+                          },
                           "exclude_items": {
                             "items": {
                               "type": "string"
@@ -5437,7 +5636,8 @@ export const tools: readonly Tool[] = [
                       {
                         "enum": [
                           "r2",
-                          "web-crawler"
+                          "web-crawler",
+                          "d1"
                         ],
                         "type": "string"
                       },
@@ -5748,6 +5948,9 @@ export const tools: readonly Tool[] = [
                 "oneOf": [
                   {
                     "properties": {
+                      "file_summary": {
+                        "type": "boolean"
+                      },
                       "keyword_tokenizer": {
                         "enum": [
                           "porter",
@@ -6039,6 +6242,17 @@ export const tools: readonly Tool[] = [
                 "oneOf": [
                   {
                     "properties": {
+                      "d1": {
+                        "properties": {
+                          "query": {
+                            "type": "string"
+                          },
+                          "template": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
                       "exclude_items": {
                         "items": {
                           "type": "string"
@@ -6222,7 +6436,8 @@ export const tools: readonly Tool[] = [
                   {
                     "enum": [
                       "r2",
-                      "web-crawler"
+                      "web-crawler",
+                      "d1"
                     ],
                     "type": "string"
                   },
@@ -6535,6 +6750,9 @@ export const tools: readonly Tool[] = [
                       "oneOf": [
                         {
                           "properties": {
+                            "file_summary": {
+                              "type": "boolean"
+                            },
                             "keyword_tokenizer": {
                               "enum": [
                                 "porter",
@@ -6826,6 +7044,17 @@ export const tools: readonly Tool[] = [
                       "oneOf": [
                         {
                           "properties": {
+                            "d1": {
+                              "properties": {
+                                "query": {
+                                  "type": "string"
+                                },
+                                "template": {
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
                             "exclude_items": {
                               "items": {
                                 "type": "string"
@@ -7009,7 +7238,8 @@ export const tools: readonly Tool[] = [
                         {
                           "enum": [
                             "r2",
-                            "web-crawler"
+                            "web-crawler",
+                            "d1"
                           ],
                           "type": "string"
                         },
@@ -7474,7 +7704,7 @@ export const tools: readonly Tool[] = [
                       "type": "boolean"
                     },
                     "match_threshold": {
-                      "default": 0.4,
+                      "description": "Minimum reranker relevance score a chunk must reach to be returned. When omitted, falls back to the instance-level score_threshold, then to 0.4.",
                       "type": "number"
                     },
                     "model": {
@@ -8542,7 +8772,7 @@ export const tools: readonly Tool[] = [
                       "type": "boolean"
                     },
                     "match_threshold": {
-                      "default": 0.4,
+                      "description": "Minimum reranker relevance score a chunk must reach to be returned. When omitted, falls back to the instance-level score_threshold, then to 0.4.",
                       "type": "number"
                     },
                     "model": {
@@ -9508,7 +9738,7 @@ export const tools: readonly Tool[] = [
                       "type": "boolean"
                     },
                     "match_threshold": {
-                      "default": 0.4,
+                      "description": "Minimum reranker relevance score a chunk must reach to be returned. When omitted, falls back to the instance-level score_threshold, then to 0.4.",
                       "type": "number"
                     },
                     "model": {
@@ -10623,6 +10853,11 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "default": false,
+                      "description": "Generates a per-file summary, topics, and keywords during indexing for text files and media transcripts of at least three chunks. The summary and keywords are stored as the item's context metadata (a context you set is kept), and the topics are added to chunk context headers where they fit. Best effort: a file whose summary fails is indexed without one. The model calls are billed to your account through the instance's AI Gateway. Changing this triggers a full re-index. Defaults to false.",
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "default": "porter",
                       "description": "Tokenizer used for keyword search indexing. porter provides word-level tokenization with Porter stemming (good for natural language queries). trigram enables character-level substring matching (good for partial matches, code, identifiers). Changing this triggers a full re-index. Defaults to porter.",
@@ -10850,6 +11085,7 @@ export const tools: readonly Tool[] = [
               "type": "number"
             },
             "source": {
+              "description": "The R2 bucket name for r2, the website URL for web-crawler, or the D1 database ID (UUID) for d1. A d1 instance also requires token_id, and the token needs D1 Read permission. The d1 database cannot be changed after creation.",
               "oneOf": [
                 {
                   "type": "string"
@@ -10863,6 +11099,26 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "description": "D1 source configuration of a d1 instance; ignored for other types. An omitted d1, query, or template keeps its stored value. For d1, include_items and exclude_items match each row's item key, `<id>.md`; a submitted source_params replaces both lists (an omitted list is cleared), so omit source_params to keep them.",
+                      "properties": {
+                        "query": {
+                          "description": "Read-only SELECT query run against the D1 database. It must return an `id` column that uniquely identifies each row. Columns named `title` and `content` set the document title and body, and up to 5 `meta_*` columns become filterable custom metadata; any other column is indexed as a labelled field. Every sync reads the full result, up to 100,000 rows, with the instance's token, and those reads count against your D1 usage. Leading and trailing whitespace is trimmed before the query is stored. Omit to keep the stored query.",
+                          "type": "string"
+                        },
+                        "template": {
+                          "description": "How each row is rendered into the indexed document: labelled renders the title, the labelled fields, then the content; content_only renders the title and content (labelled fields only when there is no content); key_value renders every column as name: value; json renders every column as a JSON object. Omit to keep the stored template.",
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "description": "List of path patterns to exclude. Uses micromatch glob syntax: * matches within a path segment, ** matches across path segments (e.g., /admin/** matches /admin/users and /admin/settings/advanced). Most accounts have a limit of 10 rules; contact support to raise it.",
                       "items": {
@@ -11005,9 +11261,13 @@ export const tools: readonly Tool[] = [
             },
             "summarization": {
               "default": false,
+              "deprecated": true,
+              "description": "Deprecated and ignored during indexing and search; changing it still re-indexes existing files on the next sync. Use indexing_options.file_summary instead.",
               "type": "boolean"
             },
             "summarization_model": {
+              "deprecated": true,
+              "description": "Deprecated and ignored during indexing and search; changing it still re-indexes existing files on the next sync. Use indexing_options.file_summary instead.",
               "oneOf": [
                 {
                   "type": "string"
@@ -11042,6 +11302,8 @@ export const tools: readonly Tool[] = [
               ]
             },
             "system_prompt_index_summarization": {
+              "deprecated": true,
+              "description": "Deprecated and has no effect. Use indexing_options.file_summary instead.",
               "oneOf": [
                 {
                   "type": "string"
@@ -11240,6 +11502,9 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "file_summary": {
+                      "type": "boolean"
+                    },
                     "keyword_tokenizer": {
                       "enum": [
                         "porter",
@@ -11501,6 +11766,26 @@ export const tools: readonly Tool[] = [
               "oneOf": [
                 {
                   "properties": {
+                    "d1": {
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        },
+                        "template": {
+                          "enum": [
+                            "labelled",
+                            "content_only",
+                            "key_value",
+                            "json"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ],
+                      "type": "object"
+                    },
                     "exclude_items": {
                       "items": {
                         "type": "string"
@@ -11638,7 +11923,8 @@ export const tools: readonly Tool[] = [
                 {
                   "enum": [
                     "r2",
-                    "web-crawler"
+                    "web-crawler",
+                    "d1"
                   ],
                   "type": "string"
                 },
@@ -11851,6 +12137,9 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "file_summary": {
+                            "type": "boolean"
+                          },
                           "keyword_tokenizer": {
                             "enum": [
                               "porter",
@@ -12112,6 +12401,26 @@ export const tools: readonly Tool[] = [
                     "oneOf": [
                       {
                         "properties": {
+                          "d1": {
+                            "properties": {
+                              "query": {
+                                "type": "string"
+                              },
+                              "template": {
+                                "enum": [
+                                  "labelled",
+                                  "content_only",
+                                  "key_value",
+                                  "json"
+                                ],
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "query"
+                            ],
+                            "type": "object"
+                          },
                           "exclude_items": {
                             "items": {
                               "type": "string"
@@ -12249,7 +12558,8 @@ export const tools: readonly Tool[] = [
                       {
                         "enum": [
                           "r2",
-                          "web-crawler"
+                          "web-crawler",
+                          "d1"
                         ],
                         "type": "string"
                       },
@@ -12379,19 +12689,44 @@ export const tools: readonly Tool[] = [
             "properties": {
               "errors": {
                 "items": {
-                  "properties": {
-                    "code": {
-                      "type": "number"
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            7017
+                          ],
+                          "type": "integer"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
                     },
-                    "message": {
-                      "type": "string"
+                    {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            7125
+                          ],
+                          "type": "integer"
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "message"
+                      ],
+                      "type": "object"
                     }
-                  },
-                  "required": [
-                    "code",
-                    "message"
-                  ],
-                  "type": "object"
+                  ]
                 },
                 "type": "array"
               },

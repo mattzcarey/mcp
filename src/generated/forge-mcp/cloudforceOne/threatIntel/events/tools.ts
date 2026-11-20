@@ -1029,7 +1029,7 @@ export const tools: readonly Tool[] = [
   {
     name: "cloudforceOne_threatIntel_events_create",
     title: "Create an event",
-    description: "Creates an event. Without `datasetId`, the event is created in the default Cloudforce One Threat Events dataset. To create a dataset, use `threat-intel datasets create`.\n\nPOST /accounts/{account_id}/cloudforce-one/events/create",
+    description: "Creates an event in the dataset given by `datasetId`. Omitting `datasetId` is deprecated: the event is created in the default Cloudforce One Threat Events dataset, and a future release will reject the request. To create a dataset, use `threat-intel datasets create`.\n\nPOST /accounts/{account_id}/cloudforce-one/events/create",
     inputSchema: {
       type: "object",
       properties: {
@@ -2228,6 +2228,7 @@ export const tools: readonly Tool[] = [
             },
             "search": {
               "default": [],
+              "description": "JSON-encoded. Structured search as a JSON array of {field, op, value} objects, AND'd together. Max 10 conditions per request. `in` and `notIn` take an array of up to 100 values. `containsAny` takes an array of up to 50 strings and matches when the field contains any of them; it is not supported for `indicator`, `date`, `killChain`, or `hasChildren`. Exclusions: `not` drops events without a value for the field; `notIn` and `notContains` keep them. On intelligence datasets, a `notIn` list containing `\"unknown\"` also drops them; analytics datasets treat `\"unknown\"` as a literal value.",
               "items": {
                 "anyOf": [
                   {
@@ -2264,7 +2265,8 @@ export const tools: readonly Tool[] = [
                           "contains",
                           "startsWith",
                           "endsWith",
-                          "find"
+                          "find",
+                          "notContains"
                         ],
                         "type": "string"
                       },
@@ -2303,7 +2305,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -2312,6 +2315,48 @@ export const tools: readonly Tool[] = [
                           "type": "string"
                         },
                         "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "op",
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "properties": {
+                      "field": {
+                        "enum": [
+                          "attacker",
+                          "attackerCountry",
+                          "category",
+                          "createdAt",
+                          "event",
+                          "indicatorType",
+                          "mitreAttack",
+                          "mitreCapec",
+                          "tags",
+                          "targetCountry",
+                          "targetIndustry",
+                          "tlp",
+                          "uuid"
+                        ],
+                        "type": "string"
+                      },
+                      "op": {
+                        "enum": [
+                          "containsAny"
+                        ],
+                        "type": "string"
+                      },
+                      "value": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "maxItems": 50,
                         "minItems": 1,
                         "type": "array"
                       }
@@ -2370,7 +2415,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -2451,7 +2497,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -2529,7 +2576,8 @@ export const tools: readonly Tool[] = [
                             "contains",
                             "startsWith",
                             "endsWith",
-                            "find"
+                            "find",
+                            "notContains"
                           ],
                           "type": "string"
                         },
@@ -2568,7 +2616,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
@@ -2577,6 +2626,48 @@ export const tools: readonly Tool[] = [
                             "type": "string"
                           },
                           "maxItems": 100,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "field",
+                        "op",
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "field": {
+                          "enum": [
+                            "attacker",
+                            "attackerCountry",
+                            "category",
+                            "createdAt",
+                            "event",
+                            "indicatorType",
+                            "mitreAttack",
+                            "mitreCapec",
+                            "tags",
+                            "targetCountry",
+                            "targetIndustry",
+                            "tlp",
+                            "uuid"
+                          ],
+                          "type": "string"
+                        },
+                        "op": {
+                          "enum": [
+                            "containsAny"
+                          ],
+                          "type": "string"
+                        },
+                        "value": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "maxItems": 50,
                           "minItems": 1,
                           "type": "array"
                         }
@@ -2635,7 +2726,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
@@ -2716,7 +2808,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
@@ -3390,7 +3483,7 @@ export const tools: readonly Tool[] = [
             },
             "search": {
               "default": [],
-              "description": "Structured search as a JSON array of {field, op, value} objects. Use the 'in' operator with an array value to bulk-check up to 100 values. Multiple conditions are AND'd together. Max 10 conditions per request.",
+              "description": "Structured search as a JSON array of {field, op, value} objects, AND'd together. Max 10 conditions per request. `in` and `notIn` take an array of up to 100 values. `containsAny` takes an array of up to 50 strings and matches when the field contains any of them; it is not supported for `indicator`, `date`, `killChain`, or `hasChildren`. Exclusions: `not` drops events without a value for the field; `notIn` and `notContains` keep them. On intelligence datasets, a `notIn` list containing `\"unknown\"` also drops them; analytics datasets treat `\"unknown\"` as a literal value.",
               "items": {
                 "anyOf": [
                   {
@@ -3427,7 +3520,8 @@ export const tools: readonly Tool[] = [
                           "contains",
                           "startsWith",
                           "endsWith",
-                          "find"
+                          "find",
+                          "notContains"
                         ],
                         "type": "string"
                       },
@@ -3466,7 +3560,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -3475,6 +3570,48 @@ export const tools: readonly Tool[] = [
                           "type": "string"
                         },
                         "maxItems": 100,
+                        "minItems": 1,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "op",
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "properties": {
+                      "field": {
+                        "enum": [
+                          "attacker",
+                          "attackerCountry",
+                          "category",
+                          "createdAt",
+                          "event",
+                          "indicatorType",
+                          "mitreAttack",
+                          "mitreCapec",
+                          "tags",
+                          "targetCountry",
+                          "targetIndustry",
+                          "tlp",
+                          "uuid"
+                        ],
+                        "type": "string"
+                      },
+                      "op": {
+                        "enum": [
+                          "containsAny"
+                        ],
+                        "type": "string"
+                      },
+                      "value": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "maxItems": 50,
                         "minItems": 1,
                         "type": "array"
                       }
@@ -3533,7 +3670,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -3614,7 +3752,8 @@ export const tools: readonly Tool[] = [
                       },
                       "op": {
                         "enum": [
-                          "in"
+                          "in",
+                          "notIn"
                         ],
                         "type": "string"
                       },
@@ -3692,7 +3831,8 @@ export const tools: readonly Tool[] = [
                             "contains",
                             "startsWith",
                             "endsWith",
-                            "find"
+                            "find",
+                            "notContains"
                           ],
                           "type": "string"
                         },
@@ -3731,7 +3871,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
@@ -3740,6 +3881,48 @@ export const tools: readonly Tool[] = [
                             "type": "string"
                           },
                           "maxItems": 100,
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "field",
+                        "op",
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "field": {
+                          "enum": [
+                            "attacker",
+                            "attackerCountry",
+                            "category",
+                            "createdAt",
+                            "event",
+                            "indicatorType",
+                            "mitreAttack",
+                            "mitreCapec",
+                            "tags",
+                            "targetCountry",
+                            "targetIndustry",
+                            "tlp",
+                            "uuid"
+                          ],
+                          "type": "string"
+                        },
+                        "op": {
+                          "enum": [
+                            "containsAny"
+                          ],
+                          "type": "string"
+                        },
+                        "value": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "maxItems": 50,
                           "minItems": 1,
                           "type": "array"
                         }
@@ -3798,7 +3981,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
@@ -3879,7 +4063,8 @@ export const tools: readonly Tool[] = [
                         },
                         "op": {
                           "enum": [
-                            "in"
+                            "in",
+                            "notIn"
                           ],
                           "type": "string"
                         },
